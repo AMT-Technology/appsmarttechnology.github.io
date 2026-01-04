@@ -210,3 +210,16 @@ body {
   flex-direction: column;
 }
 
+@media (max-width: 1024px) {
+  .apps-grid {
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .apps-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    max-height: none;
+  }
+}
+
