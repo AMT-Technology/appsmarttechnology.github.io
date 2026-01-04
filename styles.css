@@ -16,7 +16,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-   min-height: 72px;
+   min-height: 120px;
   backdrop-filter: blur(12px);
   background: linear-gradient(to right, rgba(15,23,42,0.96), rgba(15,23,42,0.92));
   border-bottom: 1px solid rgba(148, 163, 184, 0.3);
