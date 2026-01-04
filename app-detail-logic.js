@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hacer que los chips redirijan al index.html
   chips.forEach(chip => {
     chip.onclick = () => {
-      window.location.href = 'index.html';
+      window.location.href = 'https://appsem.rap-infinite.online';
     };
   });
   
@@ -526,9 +526,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') {
       const term = searchInput.value.trim();
       if (term) {
-        window.location.href = `index.html?search=${encodeURIComponent(term)}`;
+        window.location.href = `https://appsem.rap-infinite.online?search=${encodeURIComponent(term)}`;
       } else {
-        window.location.href = 'index.html';
+        window.location.href = 'https://appsem.rap-infinite.online';
       }
     }
   });
