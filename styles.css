@@ -152,6 +152,9 @@ body {
   padding-bottom: 6px; /* espacio scroll horizontal */
   padding-right: 6px;  /* espacio scroll vertical */
 }
+.apps-grid > * {
+  cursor: pointer;
+}
 
 
 /* ===== ESTADO VACÍO ===== */
@@ -170,7 +173,7 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-   margin-top: auto;
+  margin-top: auto;
 }
 
 /* RESPONSIVE */
