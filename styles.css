@@ -170,6 +170,7 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 8px;
+   margin-top: auto;
 }
 
 /* RESPONSIVE */
@@ -187,7 +188,7 @@ body {
   }
   .store-main {
     padding: 14px 12px 30px;
-    flex: 1; /* 👈 CLAVE */
+  
   }
 }
 
