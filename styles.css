@@ -185,6 +185,21 @@ body {
   min-height: 64px;
 }
 
+/* Añadir estas reglas para imágenes dentro de las tarjetas */
+.app-card img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Asegurar que el contenedor de la imagen tenga límites */
+.app-thumb-container {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+
 
 
 .app-body {
