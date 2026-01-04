@@ -41,9 +41,11 @@
 .overlay-header {
   display: flex;
   gap: 25px;
+  min-height: 120px;
   margin-bottom: 30px;
   flex-wrap: wrap;
   align-items: flex-start;
+  padding: 16px 18px;
 }
 
 .overlay-icon {
