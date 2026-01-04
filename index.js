@@ -1,360 +1,90 @@
-/* ===== RESET SIMPLE ===== */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+// ====== Referencias DOM ======
+const appsGrid = document.getElementById("appsGrid");
+const emptyState = document.getElementById("emptyState");
+const searchInput = document.getElementById("searchInput");
+const chips = document.querySelectorAll(".chip");
+document.getElementById("year").textContent = new Date().getFullYear();
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #020617;
-  color: #e5e7eb;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+let allApps = [];
+let currentCat = "all";
 
-/* ===== HEADER ===== */
-.store-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  backdrop-filter: blur(12px);
-  background: linear-gradient(to right, rgba(15,23,42,0.96), rgba(15,23,42,0.92));
-  border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-  padding: 10px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logo {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: #0b1120;
-}
-
-.brand h1 {
-  font-size: 4rem;
-  font-weight: 600;
-}
-
-.brand-tagline {
-  font-size: 1rem;
-  color: #9ca3af;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* ===== BUSCADOR ===== */
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #020617;
-  border-radius: 8px;
-  padding: 6px 10px;
-  border: 1px solid rgba(75, 85, 99, 0.8);
-  min-width: 220px;
-}
-
-.search-box .icon {
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
-
-.search-box input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #e5e7eb;
-  font-size: 0.85rem;
-  width: 100%;
-}
-
-/* ===== CATEGORÍAS ===== */
-.categories-bar {
-  padding: 8px 18px 4px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.16), transparent 58%), #020617;
-}
-
-.chip {
-  border-radius: 8px;
-  padding: 5px 12px;
-  font-size: 0.9rem;
-  border: 1px solid rgba(75,85,99,0.9);
-  background: rgba(15,23,42,0.9);
-  color: #cbd5f5;
-  cursor: pointer;
-  transition: 0.15s ease;
-}
-
-.chip:hover {
-  border-color: rgba(59,130,246,0.9);
-}
-
-.chip.active {
-  background: linear-gradient(to right, #2563eb, #4f46e5);
-  border-color: transparent;
-  color: white;
-}
-
-/* ===== MAIN CONTENT ===== */
-.store-main {
-  padding: 16px 18px 40px;
-  flex: 1;
-}
-
-.apps-section {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.section-subtitle {
-  font-size: 0.85rem;
-  color: #9ca3af;
-  margin-bottom: 16px;
-}
-
-/* ===== GRID DE APPS ===== */
-.apps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 14px;
-  margin-top: 10px;
-}
-
-/* ===== TARJETA DE APP ===== */
-.app-card {
-  background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%),
-              radial-gradient(circle at bottom right, rgba(129,140,248,0.26), transparent 60%),
-              #020617;
-  border-radius: 16px;
-  padding: 10px 10px 12px;
-  border: 1px solid rgba(51,65,85,0.95);
-  display: flex;
-  gap: 10px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-  cursor: pointer;
-}
-
-.app-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 32px rgba(15,23,42,0.9);
-  border-color: rgba(59,130,246,0.9);
-}
-
-.app-thumb {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  object-fit: cover;
-  background: #020617;
-  flex-shrink: 0;
-}
-
-.app-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.app-title {
-  font-size: 0.98rem;
-  font-weight: 600;
-}
-
-.app-meta {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin: 2px 0 4px;
-}
-
-.app-desc {
-  font-size: 0.8rem;
-  color: #cbd5f5;
-  margin-bottom: 6px;
-  line-height: 1.35;
-  max-height: 3.1em;
-  overflow: hidden;
-}
-
-/* BADGE tipo app (Gratis / Pagada) */
-.badge {
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.5);
-  color: #e5e7eb;
-}
-
-/* ===== PIE DE TARJETA ===== */
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
-
-.stats {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.75rem;
-  color: #9ca3af;
-}
-
-.stats span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* BOTONES */
-.btn-row {
-  display: flex;
-  gap: 6px;
-}
-
-.btn-small {
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-primary {
-  background: linear-gradient(to right, #22c55e, #16a34a);
-  color: white;
-}
-
-.btn-primary:hover {
-  filter: brightness(1.05);
-}
-
-.btn-ghost {
-  background: rgba(15,23,42,0.9);
-  border: 1px solid rgba(75,85,99,0.8);
-  color: #e5e7eb;
-}
-
-.btn-ghost:hover {
-  border-color: rgba(148,163,184,0.9);
-}
-
-/* ===== ESTADO VACÍO ===== */
-.empty-state {
-  margin-top: 20px;
-  font-size: 0.9rem;
-  color: #9ca3af;
-  text-align: center;
-  padding: 20px;
-}
-
-/* ===== FOOTER ===== */
-.store-footer {
-  border-top: 1px solid rgba(31,41,55,0.9);
-  padding: 10px 18px;
-  font-size: 0.8rem;
-  color: #9ca3af;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: auto;
-}
-
-.store-footer a {
-  color: #9ca3af;
-  text-decoration: none;
-}
-
-.store-footer a:hover {
-  color: #cbd5f5;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .store-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+// ====== Cargar apps ======
+db.collection("apps").orderBy("fecha", "desc").onSnapshot(
+  snap => {
+    allApps = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    renderApps();
+  },
+  () => {
+    emptyState.style.display = "block";
+    emptyState.textContent = "Error cargando apps. Intenta más tarde.";
   }
-  
-  .header-right {
-    width: 100%;
+);
+
+// ====== Render lista ======
+function renderApps() {
+  const q = (searchInput.value || "").toLowerCase();
+  appsGrid.innerHTML = "";
+
+  let list = [...allApps];
+  if (currentCat !== "all") list = list.filter(a => a.categoria === currentCat);
+  if (q) list = list.filter(a =>
+    (a.nombre || "").toLowerCase().includes(q) ||
+    (a.descripcion || "").toLowerCase().includes(q)
+  );
+
+  list.sort((a, b) => {
+    const ra = a.ratingAvg || 0;
+    const rb = b.ratingAvg || 0;
+    if (rb !== ra) return rb - ra;
+    return (b.ratingCount || 0) - (a.ratingCount || 0);
+  });
+
+  if (!list.length) {
+    emptyState.style.display = "block";
+    return;
   }
-  
-  .search-box {
-    flex: 1;
-    min-width: auto;
-  }
-  
-  .store-main {
-    padding: 14px 12px 30px;
-  }
-  
-  .brand h1 {
-    font-size: 2.5rem;
-  }
-  
-  .brand-logo {
-    width: 60px;
-    height: 60px;
-  }
+
+  emptyState.style.display = "none";
+
+  list.forEach(app => {
+    const card = document.createElement("article");
+    card.className = "play-card";
+
+    const ratingAvg = app.ratingAvg || 0;
+    const ratingCount = app.ratingCount || 0;
+    const starsText = ratingCount ? `⭐ ${ratingAvg.toFixed(1)} (${ratingCount})` : "⭐ Sin valoraciones";
+    const internet = app.internet === "offline" ? "📴 Sin Internet" : "🌐 Con Internet";
+    const descargas = app.descargasReales ?? app.descargas ?? 0;
+    const size = app.size || "—";
+    const likes = app.likes || 0;
+
+    card.innerHTML = `
+      <img class="play-icon" src="${app.imagen}" alt="${app.nombre}" loading="lazy">
+      <div class="play-info">
+        <h3 class="play-name">${app.nombre}</h3>
+        <p class="play-line1">${internet}</p>
+        <p class="play-line2">${starsText} • 👍 ${likes} • ${size} </p>
+        <p class="play-line3">⬇️${descargas} Descargas</p>
+      </div>
+    `;
+
+    // Redirigir a la página de detalles
+    card.onclick = () => {
+      window.location.href = `app-detail.html?id=${app.id}`;
+    };
+    
+    appsGrid.appendChild(card);
+  });
 }
 
-@media (max-width: 480px) {
-  .apps-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .brand h1 {
-    font-size: 2rem;
-  }
-  
-  .categories-bar {
-    padding: 6px 12px 4px;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .chip {
-    padding: 4px 8px;
-    font-size: 0.8rem;
-  }
-}
+// ====== Eventos ======
+searchInput.addEventListener("input", renderApps);
+
+chips.forEach(chip => {
+  chip.onclick = () => {
+    document.querySelector(".chip.active")?.classList.remove("active");
+    chip.classList.add("active");
+    currentCat = chip.dataset.cat;
+    renderApps();
+  };
+});
