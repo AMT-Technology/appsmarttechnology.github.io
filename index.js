@@ -67,11 +67,11 @@ function renderApps() {
         <p class="play-line3">⬇️${descargas} Descargas</p>
       </div>
     `;
+      // Redirigir a la página de detalles
 
     card.onclick = () => {
-      // Redirigir a la página de detalles
-      window.location.href = `app-detail.html?id=${app.id}`;
-    };
+  window.location.href = `app-detail.html?id=${app.id}`;
+};
     
     appsGrid.appendChild(card);
   });
