@@ -1,483 +1,627 @@
-/* app-page.css - Estilos para páginas individuales de apps */
+// ====== Referencias DOM ======
+const detailContent = document.getElementById("detailContent");
+const searchInput = document.getElementById("searchInput");
+const chips = document.querySelectorAll(".chip");
+let currentApp = null;
+let reviewStarsSelected = 0;
 
-/* Botón volver */
-.btn-back {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.btn-back:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-/* Contenedor principal de la página de app */
-.app-detail-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  min-height: calc(100vh - 200px);
-}
-
-.app-detail-container {
-  background: #020617;
-  border: 1px solid rgba(31,41,55,0.9);
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-
-/* Header de la app */
-.store-header {
-  display: flex;
-  gap: 25px;
-  min-height: 120px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  padding: 16px 18px;
-}
-
-.overlay-icon {
-  width: 120px;
-  height: 120px;
-  border-radius: 20px;
-  object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.overlay-header div {
-  flex: 1;
-  min-width: 300px;
-}
-
-.overlay-header h1 {
-  font-size: 2rem;
-  margin: 0 0 10px 0;
-  color: #e5e7eb;
-}
-
-.overlay-header p {
-  color: #64748b;
-}
-.info-title,
-.review-time {
-  color: #9ca3af;
+// ====== Obtener app de la URL ======
+function getAppParamFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("app");
 }
 
 
-  
-.categories-bar {
-  position: fixed;
-  top: 120px; /* debajo del header */
-  left: 0;
-  right: 0;
-  z-index: 900;
-  background: #020617;
-  border-bottom: 1px solid rgba(31,41,55,0.8);
-}
-.store-main {
-  padding-top: 140px; /* header (72) + categorías (~60) */
-}
+// ====== Cargar datos de la app ======
+async function cargarApp() {
+  const slug = getAppParamFromURL();
 
-  
-/* Botones de acción */
-.install-share-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 25px 0;
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 12px;
-}
-
-.install-btn, .playstore-btn, .uptodown-btn, 
-.mega-btn, .mediafire-btn, .share-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 60px;
-  height: 60px;
-}
-
-.install-btn {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-}
-
-.install-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-2px);
-}
-
-.playstore-btn {
-  background: #34d399;
-  color: white;
-}
-
-.uptodown-btn {
-  background: #8b5cf6;
-  color: white;
-}
-
-.mega-btn {
-  background: #f97316;
-  color: white;
-}
-
-.mediafire-btn {
-  background: #0ea5e9;
-  color: white;
-}
-
-.share-btn {
-  background: #64748b;
-  color: white;
-}
-
-.install-btn img, .playstore-btn img, .uptodown-btn img,
-.mega-btn img, .mediafire-btn img, .share-btn img {
-  width: 24px;
-  height: 24px;
-  filter: brightness(0) invert(1);
-}
-
-/* Stats */
-.detail-stats {
-  background: #e0f2fe;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: #0369a1;
-  font-weight: 500;
-  margin: 20px 0;
-  border-left: 4px solid #0ea5e9;
-}
-
-/* Rating */
-.rating-block {
-  background: #fff7ed;
-  padding: 20px;
-  border-radius: 12px;
-  margin: 25px 0;
-  border: 1px solid #fed7aa;
-}
-
-.rating-label {
-  font-size: 1.1rem;
-  color: #ea580c;
-  margin: 0 0 15px 0;
-  font-weight: 600;
-}
-
-.stars-row {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 15px;
-}
-
-.star-static {
-  font-size: 24px;
-  color: #fbbf24;
-  cursor: default;
-}
-
-.like-btn {
-  background: #fecaca;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-.like-btn:hover:not(:disabled) {
-  background: #fca5a5;
-}
-
-.like-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Info Grid */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin: 25px 0;
-}
-
-.info-box {
-  background: #f8fafc;
-  padding: 15px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  border: 1px solid #e2e8f0;
-  transition: transform 0.2s;
-}
-
-.info-box:hover {
-  transform: translateY(-3px);
-  border-color: #cbd5e1;
-}
-
-.info-icon {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-
-.info-title {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin: 0 0 5px 0;
-}
-
-.info-value {
-  font-size: 1rem;
-}
-
-.review-text,
-.detail-desc {
-  color: #e5e7eb;
-}
-
-.info-value a {
-  color: #3b82f6;
-  text-decoration: none;
-}
-
-.info-value a:hover {
-  text-decoration: underline;
-}
-
-/* Descripción */
-.detail-desc {
-  line-height: 1.6;
-  color: #334155;
-  font-size: 1rem;
-  margin: 20px 0;
-  padding: 20px;
-  background: #f1f5f9;
-  border-radius: 10px;
-  white-space: pre-line;
-}
-
-/* Screenshots */
-.screenshots-row {
-  display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  padding: 15px 0;
-  margin: 20px 0;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-.screenshots-row::-webkit-scrollbar {
-  height: 6px;
-}
-
-.screenshots-row::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-.screenshots-row img {
-  height: 300px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-  object-fit: cover;
-}
-
-/* Formulario reseñas */
-.review-form {
-  background: #f8fafc;
-  padding: 25px;
-  border-radius: 12px;
-  margin: 30px 0;
-  border: 1px solid #e2e8f0;
-}
-
-.review-form h3 {
-  margin: 0 0 15px 0;
-  color: #1e293b;
-}
-
-.review-form label {
-  display: block;
-  margin: 15px 0 8px 0;
-  color: #475569;
-  font-weight: 500;
-}
-
-.review-form textarea {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 1rem;
-  resize: vertical;
-  min-height: 100px;
-  margin-bottom: 15px;
-}
-
-.review-form textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Lista reseñas */
-.reviews-list {
-  margin: 30px 0;
-}
-
-.review-item {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #e2e8f0;
-}
-
-.review-stars {
-  color: #fbbf24;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.review-text {
-  color: #334155;
-  line-height: 1.5;
-  margin-bottom: 10px;
-}
-
-.review-time {
-  color: #94a3b8;
-  font-size: 0.85rem;
-}
-
-/* Loading */
-.loading-container {
-  text-align: center;
-  padding: 50px;
-  color: #64748b;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .app-detail-container {
-    padding: 20px;
+  if (!slug) {
+    window.location.href = 'index.html';
+    return;
   }
-  
-  .overlay-header {
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-  }
-  
-  .overlay-icon {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .install-share-row {
-    justify-content: center;
-  }
-  
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .screenshots-row img {
-    height: 200px;
+
+  try {
+    const snap = await db
+      .collection("apps")
+      .where("slug", "==", slug)
+      .limit(1)
+      .get();
+
+    if (snap.empty) {
+      mostrarError("App no encontrada");
+      return;
+    }
+
+    const doc = snap.docs[0];
+    currentApp = { ...doc.data(), id: doc.id };
+
+    renderAppDetails(currentApp);
+    actualizarMetaTags(currentApp);
+
+  } catch (error) {
+    console.error("Error cargando app:", error);
+    mostrarError("Error de conexión");
   }
 }
 
-/* Estrellas para gráfico de valoraciones */
-.stars-graph {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-  margin: 20px 0;
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 12px;
+
+function mostrarError(mensaje) {
+  detailContent.innerHTML = `
+    <div style="text-align: center; padding: 50px;">
+      <h2>${mensaje}</h2>
+      <button class="btn-back" onclick="window.location.href='https://appsem.rap-infinite.online/'" style="
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+      ">Volver al inicio</button>
+    </div>
+  `;
 }
 
-.stars-left {
-  text-align: center;
-  min-width: 100px;
+function actualizarMetaTags(app) {
+  // 1. Actualizar título
+  document.title = `${app.nombre} — Appser Store`;
+  
+  // 2. Actualizar meta description
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.content = `Descarga ${app.nombre} para Android desde Appser Store. ${app.descripcion?.substring(0, 150) || ''}`;
+  }
+  
+  // 🔴 3. ESTABLECER LA ETIQUETA CANÓNICA (LO MÁS IMPORTANTE)
+  const canonicalTag = document.getElementById('canonicalTag');
+  if (canonicalTag) {
+    const currentUrl = window.location.href;
+    canonicalTag.href = currentUrl;
+    console.log('✅ Canónica establecida:', currentUrl);
+  }
+  
+  // 🔴 4. AGREGAR/ACTUALIZAR OPEN GRAPH TAGS
+  actualizarOpenGraphTags(app);
+  
+  // 🔴 5. AGREGAR JSON-LD STRUCTURED DATA
+  agregarStructuredData(app);
 }
 
-.rating-big {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #1e293b;
+// 🔴 NUEVA FUNCIÓN: Actualizar Open Graph Tags
+function actualizarOpenGraphTags(app) {
+  const ogTags = {
+    'og:title': `${app.nombre} - Appser Store`,
+    'og:description': app.descripcion ? `${app.descripcion.substring(0, 155)}...` : `Descarga ${app.nombre} desde Appser Store`,
+    'og:url': window.location.href,
+    'og:image': app.imagen || app.icono || 'https://appsem.rap-infinite.online/logo.webp',
+    'og:type': 'website'
+  };
+  
+  for (const [property, content] of Object.entries(ogTags)) {
+    let meta = document.querySelector(`meta[property="${property}"]`);
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('property', property);
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', content);
+  }
 }
 
-.rating-total {
-  color: #64748b;
-  margin-top: 5px;
+// 🔴 NUEVA FUNCIÓN: Agregar Structured Data (JSON-LD)
+function agregarStructuredData(app) {
+  // Eliminar structured data anterior si existe
+  const oldScript = document.querySelector('script[type="application/ld+json"]');
+  if (oldScript) {
+    oldScript.remove();
+  }
+  
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": app.nombre,
+    "applicationCategory": app.categoria || "Application",
+    "operatingSystem": "Android",
+    "description": app.descripcion || "",
+    "softwareVersion": app.version || "1.0",
+    "datePublished": app.fechaActualizacion || new Date().toISOString().split('T')[0],
+    "author": {
+      "@type": "Organization",
+      "name": "Appser Store",
+      "url": "https://appsem.rap-infinite.online/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": app.tipo === "Gratis" ? "0" : "Varies",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": app.ratingAvg ? {
+      "@type": "AggregateRating",
+      "ratingValue": app.ratingAvg.toString(),
+      "ratingCount": (app.ratingCount || 0).toString()
+    } : undefined,
+    "image": app.imagen || app.icono || "https://appsem.rap-infinite.online/logo.webp",
+    "url": window.location.href
+  };
+  
+  // Filtrar propiedades undefined
+  Object.keys(structuredData).forEach(key => {
+    if (structuredData[key] === undefined) {
+      delete structuredData[key];
+    }
+  });
+  
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(structuredData);
+  document.head.appendChild(script);
+}
+// ====== Renderizar detalles de la app ======
+function renderAppDetails(app) {
+  const votes = JSON.parse(localStorage.getItem("appsmart_votes") || "{}");
+  const myVote = votes[app.id] || {};
+
+  const ratingAvg = app.ratingAvg || 0;
+  const ratingCount = app.ratingCount || 0;
+  const descargas = app.descargasReales ?? app.descargas ?? 0;
+  const likes = app.likes || 0;
+
+  let breakdown = app.starsBreakdown || {1:0,2:0,3:0,4:0,5:0};
+  let total = Object.values(breakdown).reduce((a,b)=>a+b,0);
+  if (!total && ratingCount) { 
+    breakdown = {1:0,2:0,3:0,4:0,5:ratingCount}; 
+    total = ratingCount; 
+  }
+
+  // Función para estrellas estáticas
+  function renderStarsStatic(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.25 && rating % 1 < 0.75 ? 1 : 0;
+    const empty = 5 - full - half;
+    let stars = '';
+    for (let i = 0; i < full; i++) stars += '<span class="star-static">★</span>';
+    if (half) stars += '<span class="star-static">⯨</span>';
+    for (let i = 0; i < empty; i++) stars += '<span class="star-static">☆</span>';
+    return stars;
+  }
+
+  // HTML del overlay (EXACTO al de la página principal)
+  const html = `
+    <button id="detailClose" class="overlay-close" onclick="window.history.back()">✕</button>
+
+    <div class="overlay-header">
+      <img id="detailIcon" class="overlay-icon" src="${app.imagen}" alt="${app.nombre}" loading="lazy">
+      <div>
+        <h1 id="detailName">${app.nombre}</h1>
+        <p id="detailCategory">${app.categoria}</p>
+        <p id="detailSize">📦 Tamaño: ${app.size || '—'}</p>
+        <p id="detailInternet">${app.internet === 'offline' ? '📴 Funciona sin Internet' : '🌐 Requiere Internet'}</p>
+      </div>
+    </div>
+
+    <div class="install-share-row">
+      <button id="installBtn" class="install-btn">
+        <img src="assets/icons/descargar.png" alt="Descarga Directa">
+      </button>
+
+      ${app.playstoreUrl ? `<button id="playstoreBtn" class="playstore-btn">
+        <img src="assets/icons/playstore.png" alt="Play Store">
+      </button>` : ''}
+
+      ${app.uptodownUrl ? `<button id="uptodownBtn" class="uptodown-btn">
+        <img src="assets/icons/uptodown.png" alt="Uptodown">
+      </button>` : ''}
+
+      ${app.megaUrl ? `<button id="megaBtn" class="mega-btn">
+        <img src="assets/icons/mega.png" alt="Mega">
+      </button>` : ''}
+
+      ${app.mediafireUrl ? `<button id="mediafireBtn" class="mediafire-btn">
+        <img src="assets/icons/mediafire.png" alt="Mediafire">
+      </button>` : ''}
+
+      <button id="shareBtn" class="share-btn">
+        <img src="assets/icons/compartir.png" alt="Compartir">
+      </button>
+    </div>
+
+    <p id="detailStats" class="detail-stats">
+      Descargas: ${descargas.toLocaleString("es-ES")} • 
+      Likes: ${likes.toLocaleString("es-ES")}
+    </p>
+
+    <!-- Bloque estrellas + like -->
+    <div class="rating-block">
+      <p id="ratingLabel" class="rating-label">
+        Valoración: ${ratingAvg.toFixed(1)} (${ratingCount} votos)
+      </p>
+      <div id="starsRow" class="stars-row">
+        ${renderStarsStatic(ratingAvg)}
+      </div>
+      <button id="likeBtn" class="like-btn" ${myVote.liked ? 'disabled' : ''}>
+        ${myVote.liked ? '❤️ Ya te gusta' : '❤️ Me gusta'} (${likes})
+      </button>
+    </div>
+
+    <!-- Resumen valoraciones -->
+    <h2>Valoraciones y reseñas</h2>
+    <div class="stars-graph">
+      <div class="stars-left">
+        <div id="ratingBig" class="rating-big">${ratingAvg.toFixed(1)}</div>
+        <div id="ratingTotal" class="rating-total">${total} reseñas</div>
+      </div>
+
+      <div class="stars-bars">
+        ${[5,4,3,2,1].map(star => `
+          <div class="bar-row">
+            <span>${star}</span>
+            <div class="bar"><div id="bar${star}" class="bar-fill" style="width: ${total ? (breakdown[star] / total) * 100 : 0}%"></div></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN DE LA APP -->
+    <h2>Información de la app</h2>
+    <div class="info-grid">
+      <div class="info-box">
+        <span class="info-icon">🌐</span>
+        <div>
+          <p class="info-title">Idioma</p>
+          <p id="infoIdioma" class="info-value">${app.idioma || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">🔢</span>
+        <div>
+          <p class="info-title">Versión</p>
+          <p id="infoVersion" class="info-value">${app.version || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">🏷️</span>
+        <div>
+          <p class="info-title">Licencia</p>
+          <p id="infoTipo" class="info-value">${app.tipo || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">📱</span>
+        <div>
+          <p class="info-title">Sistema operativo</p>
+          <p id="infoSO" class="info-value">${app.sistemaOperativo || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">⚙️</span>
+        <div>
+          <p class="info-title">Requisitos del sistema</p>
+          <p id="infoReq" class="info-value">${app.requisitos || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">📅</span>
+        <div>
+          <p class="info-title">Actualización</p>
+          <p id="infoFechaAct" class="info-value">${app.fechaActualizacion ? new Date(app.fechaActualizacion).toLocaleDateString('es-ES') : '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">🔞</span>
+        <div>
+          <p class="info-title">Edad recomendada</p>
+          <p id="infoEdad" class="info-value">${app.edad || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">📢</span>
+        <div>
+          <p class="info-title">Anuncios</p>
+          <p id="infoAnuncios" class="info-value">${app.anuncios === 'si' ? 'Sí' : app.anuncios === 'no' ? 'No' : '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">🔗</span>
+        <div>
+          <p class="info-title">Política de privacidad</p>
+          <p class="info-value">
+            ${app.privacidadUrl ? `<a href="${app.privacidadUrl}" target="_blank">Ver política</a>` : 'No disponible'}
+          </p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">📦</span>
+        <div>
+          <p class="info-title">Tamaño del APK</p>
+          <p id="infoTamañoApk" class="info-value">${app.size || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">🆔</span>
+        <div>
+          <p class="info-title">Package Name</p>
+          <p id="infoPackageName" class="info-value">${app.packageName || '—'}</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">⬇️</span>
+        <div>
+          <p class="info-title">Descargas</p>
+          <p id="infoDescargas" class="info-value">${descargas.toLocaleString('es-ES')}</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Descripción</h2>
+    <p id="detailDesc" class="detail-desc">${app.descripcion || ''}</p>
+
+    ${app.imgSecundarias && app.imgSecundarias.length > 0 ? `
+    <h2>Capturas de pantalla</h2>
+    <div id="detailScreens" class="screenshots-row">
+      ${app.imgSecundarias.map(img => `<img src="${img}" alt="Captura" loading="lazy">`).join('')}
+    </div>
+    ` : ''}
+
+    <h2>Reseñas de usuarios</h2>
+    
+    <!-- Formulario reseña -->
+    <div class="review-form">
+      <h3>Escribe una reseña</h3>
+      <label>Tu puntuación:</label>
+      <div id="reviewStars" class="stars-row"></div>
+      <textarea id="reviewText" placeholder="Escribe tu comentario..." maxlength="280"></textarea>
+      <button id="sendReviewBtn" class="install-btn" style="margin-top:10px;">
+        Enviar reseña
+      </button>
+    </div>
+    
+    <!-- Lista reseñas -->
+    <div id="reviewsList" class="reviews-list"></div>
+  `;
+
+  detailContent.innerHTML = html;
+
+  // Inicializar eventos
+  inicializarEventos(app);
+  renderReviewStars();
+  loadReviews(app.id);
 }
 
-.stars-bars {
-  flex: 1;
+// ====== Inicializar eventos ======
+function inicializarEventos(app) {
+  // Botón de descarga principal
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.onclick = () => {
+      if (!app.apk) {
+        alert("🚫 No hay archivo disponible.");
+        return;
+      }
+      
+      installBtn.disabled = true;
+      installBtn.innerHTML = '<img src="assets/icons/descargar.png" alt="Descargando...">';
+      
+      // Incrementar contador
+      db.collection("apps").doc(app.id).update({
+        descargasReales: firebase.firestore.FieldValue.increment(1)
+      }).then(() => {
+        window.open(app.apk, '_blank');
+        setTimeout(() => {
+          installBtn.disabled = false;
+          installBtn.innerHTML = '<img src="assets/icons/descargar.png" alt="Descarga Directa">';
+        }, 1000);
+      });
+    };
+  }
+
+  // Botones extra
+  const botones = [
+    {id: 'playstoreBtn', url: app.playstoreUrl},
+    {id: 'uptodownBtn', url: app.uptodownUrl},
+    {id: 'megaBtn', url: app.megaUrl},
+    {id: 'mediafireBtn', url: app.mediafireUrl},
+  ];
+
+  botones.forEach(({id, url}) => {
+    const btn = document.getElementById(id);
+    if (btn && url) {
+      btn.style.display = 'inline-block';
+      btn.onclick = () => window.open(url, '_blank');
+    } else if (btn) {
+      btn.style.display = 'none';
+    }
+  });
+
+  // Compartir
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    shareBtn.onclick = () => {
+      const url = window.location.href;
+      const title = app.nombre;
+      const text = app.descripcion?.substring(0, 100) || '';
+      
+      if (navigator.share) {
+        navigator.share({ title, text, url });
+      } else {
+        navigator.clipboard.writeText(url);
+        alert('¡Enlace copiado al portapapeles!');
+      }
+    };
+  }
+
+  // Like
+  const likeBtn = document.getElementById('likeBtn');
+  if (likeBtn) {
+    likeBtn.onclick = () => {
+      const votes = JSON.parse(localStorage.getItem("appsmart_votes") || "{}");
+      if (votes[app.id] && votes[app.id].liked) return;
+      
+      db.collection("apps").doc(app.id).update({
+        likes: firebase.firestore.FieldValue.increment(1)
+      }).then(() => {
+        votes[app.id] = { liked: true };
+        localStorage.setItem("appsmart_votes", JSON.stringify(votes));
+        
+        likeBtn.textContent = `❤️ Ya te gusta (${(app.likes || 0) + 1})`;
+        likeBtn.disabled = true;
+      });
+    };
+  }
 }
 
-.bar-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 8px 0;
+// ====== Reseñas ======
+function renderReviewStars() {
+  const container = document.getElementById('reviewStars');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = '☆';
+    btn.className = 'star-btn';
+    btn.onclick = () => setReviewStars(i);
+    container.appendChild(btn);
+  }
 }
 
-.bar-row span {
-  width: 20px;
-  text-align: right;
-  color: #64748b;
+function setReviewStars(n) {
+  reviewStarsSelected = n;
+  const stars = document.querySelectorAll('#reviewStars .star-btn');
+  stars.forEach((star, index) => {
+    star.textContent = index < n ? '★' : '☆';
+  });
 }
 
-.bar {
-  flex: 1;
-  height: 10px;
-  background: #e2e8f0;
-  border-radius: 5px;
-  overflow: hidden;
+function loadReviews(appId) {
+  const container = document.getElementById('reviewsList');
+  if (!container) return;
+  
+  container.innerHTML = '<p>Cargando reseñas...</p>';
+  
+  db.collection("apps").doc(appId).collection("reviews")
+    .orderBy("timestamp", "desc")
+    .get()
+    .then(snap => {
+      container.innerHTML = '';
+      
+      if (snap.empty) {
+        container.innerHTML = '<p>No hay reseñas todavía. Sé el primero en comentar.</p>';
+        return;
+      }
+      
+      snap.forEach(doc => {
+        const r = doc.data();
+        const item = document.createElement('div');
+        item.className = 'review-item';
+        const starsStr = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+        item.innerHTML = `
+          <div class="review-stars">${starsStr}</div>
+          <div class="review-text">${r.comment}</div>
+          <div class="review-time">${new Date(r.timestamp).toLocaleDateString('es-ES')}</div>
+        `;
+        container.appendChild(item);
+      });
+    })
+    .catch(() => {
+      container.innerHTML = '<p>Error cargando reseñas.</p>';
+    });
 }
 
-.bar-fill {
-  height: 100%;
-  background: #fbbf24;
-  border-radius: 5px;
+// ====== Enviar reseña ======
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'sendReviewBtn' || e.target.closest('#sendReviewBtn')) {
+    handleSendReview();
+  }
+});
+
+function handleSendReview() {
+  if (!currentApp) return;
+  
+  const text = document.getElementById('reviewText')?.value.trim() || '';
+  if (reviewStarsSelected === 0) {
+    alert("Selecciona una puntuación.");
+    return;
+  }
+  if (text.length < 5) {
+    alert("Escribe un comentario más largo (mínimo 5 caracteres).");
+    return;
+  }
+  
+  const app = currentApp;
+  const prevAvg = app.ratingAvg || 0;
+  const prevCount = app.ratingCount || 0;
+  const newCount = prevCount + 1;
+  const newAvg = (prevAvg * prevCount + reviewStarsSelected) / newCount;
+  const breakdown = app.starsBreakdown || {1:0,2:0,3:0,4:0,5:0};
+  breakdown[reviewStarsSelected]++;
+  
+  const appRef = db.collection("apps").doc(app.id);
+  const reviewRef = appRef.collection("reviews").doc();
+  const batch = db.batch();
+  
+  batch.set(reviewRef, { 
+    stars: reviewStarsSelected, 
+    comment: text, 
+    timestamp: Date.now(),
+    userId: 'anonymous'
+  });
+  
+  batch.update(appRef, { 
+    ratingAvg: newAvg, 
+    ratingCount: newCount, 
+    starsBreakdown: breakdown 
+  });
+  
+  batch.commit().then(() => {
+    // Limpiar formulario
+    const reviewText = document.getElementById('reviewText');
+    if (reviewText) reviewText.value = '';
+    reviewStarsSelected = 0;
+    renderReviewStars();
+    
+    // Recargar reviews
+    loadReviews(app.id);
+    
+    alert("¡Tu reseña fue publicada!");
+  }).catch(error => {
+    console.error("Error enviando reseña:", error);
+    alert("Error al enviar la reseña.");
+  });
 }
+
+// ====== Inicializar ======
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  cargarApp();
+  
+  // Hacer que los chips redirijan al index.html
+  chips.forEach(chip => {
+    chip.onclick = () => {
+      window.location.href = 'https://appsem.rap-infinite.online';
+    };
+  });
+  
+  // Hacer que el buscador redirija al index.html con búsqueda
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const term = searchInput.value.trim();
+      if (term) {
+        window.location.href = `https://appsem.rap-infinite.online?search=${encodeURIComponent(term)}`;
+      } else {
+        window.location.href = 'https://appsem.rap-infinite.online';
+      }
+    }
+  });
+});
