@@ -1,4 +1,4 @@
-// ====== Referencias DOM ======
+si seras , si aqui kmismo esta el htm tambien : // ====== Referencias DOM ======
 const detailContent = document.getElementById("detailContent");
 const searchInput = document.getElementById("searchInput");
 const chips = document.querySelectorAll(".chip");
@@ -402,29 +402,39 @@ function renderAppDetails(app) {
 // ====== Inicializar eventos ======
 function inicializarEventos(app) {
   // Botón de descarga principal
-  const installBtn = document.getElementById('installBtn');
-  if (installBtn) {
-    installBtn.onclick = () => {
-      if (!app.apk) {
-        alert("🚫 No hay archivo disponible.");
-        return;
-      }
-      
-      installBtn.disabled = true;
-      installBtn.innerHTML = '<img src="assets/icons/descargar.png" alt="Descargando...">';
-      
-      // Incrementar contador
-      db.collection("apps").doc(app.id).update({
-        descargasReales: firebase.firestore.FieldValue.increment(1)
-      }).then(() => {
-        window.open(app.apk, '_blank');
-        setTimeout(() => {
-          installBtn.disabled = false;
-          installBtn.innerHTML = '<img src="assets/icons/descargar.png" alt="Descarga Directa">';
-        }, 1000);
+  // Botón de like
+const likeBtn = document.getElementById('likeBtn');
+if (likeBtn) {
+
+  likeBtn.onclick = async () => {
+    const votes = JSON.parse(localStorage.getItem("appsmart_votes") || "{}");
+
+    // Evitar doble voto
+    if (votes[app.id] && votes[app.id].liked) return;
+
+    try {
+      // Incrementar en Firestore
+      await db.collection("apps").doc(app.id).update({
+        likes: firebase.firestore.FieldValue.increment(1)
       });
-    };
-  }
+
+      // Guardar localmente que ya votó
+      votes[app.id] = { liked: true };
+      localStorage.setItem("appsmart_votes", JSON.stringify(votes));
+
+      // 🔥 ACTUALIZAR app.likes PARA QUE LA UI SEA CORRECTA
+      app.likes = (app.likes || 0) + 1;
+
+      // 🔥 NO BORRAR CLASES NI ID, SOLO CAMBIAR TEXTO
+      likeBtn.innerHTML = `❤️ Ya te gusta (${app.likes})`;
+      likeBtn.disabled = true;
+
+    } catch (e) {
+      console.error("Error al dar like:", e);
+    }
+  };
+}
+
 
   // Botones extra
   const botones = [
@@ -462,39 +472,24 @@ function inicializarEventos(app) {
   }
 
   // Like
- // Botón de like
-const likeBtn = document.getElementById('likeBtn');
-if (likeBtn) {
-
-  likeBtn.onclick = async () => {
-    const votes = JSON.parse(localStorage.getItem("appsmart_votes") || "{}");
-
-    // Evitar doble voto
-    if (votes[app.id] && votes[app.id].liked) return;
-
-    try {
-      // Incrementar en Firestore
-      await db.collection("apps").doc(app.id).update({
+  const likeBtn = document.getElementById('likeBtn');
+  if (likeBtn) {
+    likeBtn.onclick = () => {
+      const votes = JSON.parse(localStorage.getItem("appsmart_votes") || "{}");
+      if (votes[app.id] && votes[app.id].liked) return;
+      
+      db.collection("apps").doc(app.id).update({
         likes: firebase.firestore.FieldValue.increment(1)
+      }).then(() => {
+        votes[app.id] = { liked: true };
+        localStorage.setItem("appsmart_votes", JSON.stringify(votes));
+        
+        likeBtn.textContent = `❤️ Ya te gusta (${(app.likes || 0) + 1})`;
+        likeBtn.disabled = true;
       });
-
-      // Guardar localmente que ya votó
-      votes[app.id] = { liked: true };
-      localStorage.setItem("appsmart_votes", JSON.stringify(votes));
-
-      // 🔥 ACTUALIZAR app.likes PARA QUE LA UI SEA CORRECTA
-      app.likes = (app.likes || 0) + 1;
-
-      // 🔥 NO BORRAR CLASES NI ID, SOLO CAMBIAR TEXTO
-      likeBtn.innerHTML = `❤️ Ya te gusta (${app.likes})`;
-      likeBtn.disabled = true;
-
-    } catch (e) {
-      console.error("Error al dar like:", e);
-    }
-  };
+    };
+  }
 }
-
 
 // ====== Reseñas ======
 function renderReviewStars() {
