@@ -3,78 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <title>Appser Store — Detalles de la App</title>
-  <!-- Responsive -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <!-- ETIQUETA CANÓNICA DINÁMICA - ESTO ES LO MÁS IMPORTANTE -->
   <link id="canonicalTag" rel="canonical" href="">
-  
-  <!-- SEO dinámico -->
   <meta name="description" content="Descarga esta aplicación desde Appser Store">
   <meta name="robots" content="index, follow">
-  
-  <!-- Estilos ESPECÍFICOS para página de detalles -->
   <link rel="stylesheet" href="detalle.css">
+  
+  <!-- Open Graph tags para compartir -->
+  <meta property="og:title" content="Appser Store — Detalles de la App">
+  <meta property="og:description" content="Descarga esta aplicación desde Appser Store">
+  <meta property="og:image" content="logo.webp">
+  <meta property="og:url" content="">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body>  
-  <!-- HEADER (IDÉNTICO al index.html) -->
+  <!-- HEADER -->
   <header class="store-header">
-    <img src="logo.webp" alt="Appser" class="brand-logo" onclick="window.location.href='https://appsem.rap-infinite.online/'">
+    <button class="btn-back" onclick="window.history.back()">
+      ← Volver
+    </button>
+    
     <div class="brand">
-      <div>
-        <h1>Appser Store</h1>
-        <p class="brand-tagline">Apps para todos</p>
-      </div>
+      <h1>Appser Store</h1>
     </div>
-
+    
     <div class="header-right">
-      <div class="search-box">
-        <span class="icon">🔍</span>
-        <input id="searchInput" type="text" placeholder="Buscar apps, juegos, herramientas..." />
-      </div>
+      <img src="logo.webp" alt="Appser" class="brand-logo" 
+           onclick="window.location.href='https://appsem.rap-infinite.online/'">
     </div>
   </header>
 
-  <!-- CATEGORÍAS (IDÉNTICAS al index.html) -->
-  <section class="categories-bar">
-    <button class="chip active" data-cat="all">Todas</button>
-    <button class="chip" data-cat="Educación">Educación</button>
-    <button class="chip" data-cat="Libros">Libros</button>
-    <button class="chip" data-cat="Juegos">Juegos</button>
-    <button class="chip" data-cat="Música y Audio">Música y Audio</button>
-    <button class="chip" data-cat="Productividad">Productividad</button>
-    <button class="chip" data-cat="Sociales">Sociales</button>
-    <button class="chip" data-cat="Fotografía y Video">Fotografía y Video</button>
-    <button class="chip" data-cat="Entretenimiento">Entretenimiento</button>
-    <button class="chip" data-cat="Herramientas">Herramientas</button>
-  </section>
-
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="store-main">
-    <!-- SECCIÓN DE APPS (OCULTA - se mantiene por compatibilidad) -->
-    <section class="apps-section">
-      <div id="appsGrid" class="apps-grid"></div>
-      <p id="emptyState" class="empty-state" style="display:none;">
-        No se encontraron apps para esta búsqueda o categoría.
-      </p>
-    </section>
-    
-    <!-- OVERLAY (VISIBLE COMO CONTENIDO PRINCIPAL) -->
-     <!-- CONTENIDO DE DETALLE (YA NO OVERLAY) -->
-  <section class="app-detail-page">
-    <div id="detailContent" style="padding: 50px; color: #64748b;">
+  <!-- CONTENIDO DE DETALLE -->
+  <main class="app-detail-page">
+    <div id="detailContent">
       <p>Cargando información de la aplicación...</p>
     </div>
-  </section>
-    
   </main>
   
   <footer class="store-footer">
     <div>
-      © <span id="year"></span> Appser Store — Apps para todos ·
-      <a href="/privacidad.html" style="color: #9ca3af;">Privacidad</a> ·
-      <a href="/terminos.html" style="color: #9ca3af;">Términos</a>
+      © <span id="year"></span> Appser Store — Apps para todos
     </div>
   </footer>
 
